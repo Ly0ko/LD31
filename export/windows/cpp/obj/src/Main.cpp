@@ -73,7 +73,7 @@ HX_STACK_THIS(this)
 	HX_STACK_LINE(17)
 	this->framerate = (int)60;
 	HX_STACK_LINE(16)
-	this->zoom = (int)4;
+	this->zoom = (int)-1;
 	HX_STACK_LINE(15)
 	this->initialState = hx::ClassOf< ::PlayState >();
 	HX_STACK_LINE(14)

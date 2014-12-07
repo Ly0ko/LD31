@@ -13,13 +13,13 @@ class Mob extends FlxSprite
 	var _gravity:Int = 1600;
 	var _maxFallSpeed:Int = 800;
 
-	public var _health:Int = 100;
+	public var _health:Int = 140;
 
 	public function new(x:Float, y:Float)
 	{
 		super(x, y);
 
-		makeGraphic(16, 16, 0xffff0000);
+		makeGraphic(16, 20, 0xffff0000);
 		health = _health;
 		velocity.x = maxSpeed;
 		maxVelocity.y = _maxFallSpeed;

@@ -34,6 +34,11 @@ class HXCPP_CLASS_ATTRIBUTES  Bullet_obj : public ::flixel::FlxSprite_obj{
 		::String __ToString() const { return HX_CSTRING("Bullet"); }
 
 		int _velocity;
+		virtual Void update( );
+
+		virtual Void levelConstraints( );
+		Dynamic levelConstraints_dyn();
+
 };
 
 

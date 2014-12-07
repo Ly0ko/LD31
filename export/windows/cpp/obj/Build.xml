@@ -2855,6 +2855,7 @@
   </file>
   <file name="src/Player.cpp">
    <depend name="include/Bullet.h"/>
+   <depend name="include/IMap.h"/>
    <depend name="include/PlayState.h"/>
    <depend name="include/Player.h"/>
    <depend name="include/Reg.h"/>
@@ -2877,6 +2878,7 @@
    <depend name="include/flixel/tweens/FlxTween.h"/>
    <depend name="include/flixel/tweens/misc/VarTween.h"/>
    <depend name="include/flixel/util/FlxPoint.h"/>
+   <depend name="include/haxe/ds/IntMap.h"/>
   </file>
   <file name="src/PlayState.cpp">
    <depend name="include/Mob.h"/>
@@ -2896,6 +2898,7 @@
    <depend name="include/flixel/text/FlxText.h"/>
    <depend name="include/flixel/tile/FlxTilemap.h"/>
    <depend name="include/flixel/util/FlxPoint.h"/>
+   <depend name="include/flixel/util/FlxTimer.h"/>
    <depend name="include/openfl/_v2/Assets.h"/>
   </file>
   <file name="src/flixel/FlxState.cpp">
@@ -3018,11 +3021,17 @@
   </file>
   <file name="src/Bullet.cpp">
    <depend name="include/Bullet.h"/>
+   <depend name="include/PlayState.h"/>
+   <depend name="include/Reg.h"/>
    <depend name="include/flixel/FlxBasic.h"/>
    <depend name="include/flixel/FlxObject.h"/>
    <depend name="include/flixel/FlxSprite.h"/>
+   <depend name="include/flixel/FlxState.h"/>
+   <depend name="include/flixel/group/FlxGroup.h"/>
+   <depend name="include/flixel/group/FlxTypedGroup.h"/>
    <depend name="include/flixel/interfaces/IFlxDestroyable.h"/>
    <depend name="include/flixel/interfaces/IFlxPooled.h"/>
+   <depend name="include/flixel/tile/FlxTilemap.h"/>
    <depend name="include/flixel/util/FlxPoint.h"/>
   </file>
   <file name="src/flixel/FlxSprite.cpp">

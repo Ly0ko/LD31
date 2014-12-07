@@ -17,4 +17,15 @@ class Bullet extends FlxSprite
 		velocity.x = _velocity;
 	} 
 
+	override public function update():Void
+	{
+		levelConstraints();
+
+		super.update();
+	}
+
+	function levelConstraints() {
+		if (x < 0 || x > Reg.state.level.width - width) kill();
+	}
+
 }

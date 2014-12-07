@@ -20,7 +20,7 @@ class Player extends FlxSprite
 	var _maxFallSpeed:Int = 800;
 	var _jumpforce:Int = 420;
 
-	public var _health:Int = 100;
+	public var _health:Int = 100000000;
 
 	public var bullets:FlxGroup;
 	var bullet:Bullet;
@@ -31,7 +31,11 @@ class Player extends FlxSprite
 	public function new(x:Float, y:Float)
 	{
 		super(x, y);
-		makeGraphic(16, 32, 0xff0000ff);
+		// makeGraphic(16, 32, 0xff0000ff);
+		loadGraphic("assets/images/player.png", true, 32, 32);
+
+		setFacingFlip(FlxObject.LEFT, true, false);
+		setFacingFlip(FlxObject.RIGHT, false, false);
 
 		_shootSound = FlxG.sound.load("assets/sounds/shoot.wav", 0.4);
 
@@ -75,8 +79,16 @@ class Player extends FlxSprite
 		var xForce:Float = 0;
 		var jumping:Bool = false;
 
-		if (FlxG.keys.pressed.A) xForce--;
-		if (FlxG.keys.pressed.D) xForce++;
+		if (FlxG.keys.pressed.LEFT) {
+			xForce--;
+			facing = FlxObject.LEFT;
+		}
+
+		if (FlxG.keys.pressed.RIGHT) {
+			xForce++;
+			facing = FlxObject.RIGHT;
+		}
+
 		if (FlxG.keys.justPressed.SPACE) jumping = true;
 		if (FlxG.keys.justReleased.SPACE) velocity.y = velocity.y * 0.5;
 
@@ -92,27 +104,21 @@ class Player extends FlxSprite
 
 		bulletDelay--;
 
-		if (FlxG.keys.justPressed.LEFT && bulletDelay < 0) {
+		if (FlxG.keys.justPressed.A && bulletDelay < 0) {
 			bulletDelay = 5;
 
-			bullet = new Bullet(x + width / 2, y + height / 2);
-			bullet.velocity.x = -bullet._velocity;
-			bullets.add(bullet);
+			if (facing == FlxObject.LEFT) {
+				bullet = new Bullet(x + width / 2 - 8, y + height / 2 - 2);
+				bullet.velocity.x = -bullet._velocity;
+				bullets.add(bullet);
+			} else {
+				bullet = new Bullet(x + width / 2 + 7, y + height / 2 - 2);
+				bullets.add(bullet);
+			}
 
 			_shootSound.setPosition(x, y);
 			_shootSound.play(true);
 		}
-
-		if (FlxG.keys.justPressed.RIGHT && bulletDelay < 0) {
-			bulletDelay = 5;
-
-			bullet = new Bullet(x + width / 2, y + height / 2);
-			bullets.add(bullet);
-
-			_shootSound.setPosition(x, y);
-			_shootSound.play(true);
-		}
-
 	}
 
 	function levelConstraints():Void

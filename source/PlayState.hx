@@ -4,11 +4,13 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.FlxObject;
+import flixel.group.FlxGroup;
 import flixel.tile.FlxTilemap;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxMath;
 import flixel.util.FlxStringUtil;
+import flixel.util.FlxTimer;
 import openfl.Assets;
 
 /**
@@ -19,9 +21,11 @@ class PlayState extends FlxState
 
 	public var level:FlxTilemap;
 	public var player:Player;
+
 	var healthText:FlxText;
+
+	var waves:FlxGroup;
 	var mob:Mob;
-	var mob2:Mob;
 
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -35,10 +39,9 @@ class PlayState extends FlxState
 		addPlayer();
 		addUIText();
 
-		mob = new Mob(120, 520);
-		mob2 = new Mob(580, 520);
-		add(mob);
-		add(mob2);
+		waves = new FlxGroup();
+
+		new FlxTimer(2, addWave, 8);
 
 		add(player.bullets);
 
@@ -62,13 +65,10 @@ class PlayState extends FlxState
 		setUIText();
 
 		FlxG.collide(level, player);
-		FlxG.collide(level, mob);
-		FlxG.collide(level, mob2);
+		FlxG.collide(level, waves);
 		FlxG.collide(player.bullets, level, bulletHitMap);
-		FlxG.collide(player.bullets, mob, bulletHitMob);
-		FlxG.collide(player.bullets, mob2, bulletHitMob);
-		FlxG.collide(mob, player, enemyPlayerOverlap);
-		FlxG.collide(mob2, player, enemyPlayerOverlap);
+		FlxG.collide(player.bullets, waves, bulletHitMob);
+		FlxG.collide(waves, player, enemyPlayerOverlap);
 
 		super.update();
 	}	
@@ -84,6 +84,13 @@ class PlayState extends FlxState
 	{
 		player = new Player(FlxG.width * 0.5, 520);
 		add(player);
+	}
+
+	function addWave(_):Void
+	{
+		waves.add(new Mob(10, 550));
+		waves.add(new Mob(780, 550));
+		add(waves);
 	}
 
 	function addUIText():Void

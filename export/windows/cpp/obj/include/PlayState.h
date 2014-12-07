@@ -18,6 +18,7 @@ HX_DECLARE_CLASS2(flixel,group,FlxTypedGroup)
 HX_DECLARE_CLASS2(flixel,interfaces,IFlxDestroyable)
 HX_DECLARE_CLASS2(flixel,text,FlxText)
 HX_DECLARE_CLASS2(flixel,tile,FlxTilemap)
+HX_DECLARE_CLASS2(flixel,util,FlxTimer)
 
 
 class HXCPP_CLASS_ATTRIBUTES  PlayState_obj : public ::flixel::FlxState_obj{
@@ -45,8 +46,8 @@ class HXCPP_CLASS_ATTRIBUTES  PlayState_obj : public ::flixel::FlxState_obj{
 		::flixel::tile::FlxTilemap level;
 		::Player player;
 		::flixel::text::FlxText healthText;
+		::flixel::group::FlxGroup waves;
 		::Mob mob;
-		::Mob mob2;
 		virtual Void create( );
 
 		virtual Void destroy( );
@@ -58,6 +59,9 @@ class HXCPP_CLASS_ATTRIBUTES  PlayState_obj : public ::flixel::FlxState_obj{
 
 		virtual Void addPlayer( );
 		Dynamic addPlayer_dyn();
+
+		virtual Void addWave( ::flixel::util::FlxTimer _);
+		Dynamic addWave_dyn();
 
 		virtual Void addUIText( );
 		Dynamic addUIText_dyn();

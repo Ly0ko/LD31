@@ -24,6 +24,8 @@ class AssetData {
 			type.set ("assets/images/images-go-here.txt", Reflect.field (AssetType, "text".toUpperCase ()));
 			path.set ("assets/images/mapTiles.png", "assets/images/mapTiles.png");
 			type.set ("assets/images/mapTiles.png", Reflect.field (AssetType, "image".toUpperCase ()));
+			path.set ("assets/images/player.png", "assets/images/player.png");
+			type.set ("assets/images/player.png", Reflect.field (AssetType, "image".toUpperCase ()));
 			path.set ("assets/music/music-goes-here.txt", "assets/music/music-goes-here.txt");
 			type.set ("assets/music/music-goes-here.txt", Reflect.field (AssetType, "text".toUpperCase ()));
 			path.set ("assets/sounds/shoot.wav", "assets/sounds/shoot.wav");

@@ -51,17 +51,20 @@
 #ifndef INCLUDED_flixel_util_FlxPoint
 #include <flixel/util/FlxPoint.h>
 #endif
+#ifndef INCLUDED_flixel_util_FlxTimer
+#include <flixel/util/FlxTimer.h>
+#endif
 #ifndef INCLUDED_openfl__v2_Assets
 #include <openfl/_v2/Assets.h>
 #endif
 
 Void PlayState_obj::__construct(Dynamic MaxSize)
 {
-HX_STACK_FRAME("PlayState","new",0xf8bf96cf,"PlayState.new","PlayState.hx",17,0xb30d7781)
+HX_STACK_FRAME("PlayState","new",0xf8bf96cf,"PlayState.new","PlayState.hx",19,0xb30d7781)
 HX_STACK_THIS(this)
 HX_STACK_ARG(MaxSize,"MaxSize")
 {
-	HX_STACK_LINE(17)
+	HX_STACK_LINE(19)
 	super::__construct(MaxSize);
 }
 ;
@@ -83,33 +86,27 @@ Dynamic PlayState_obj::__Create(hx::DynamicArray inArgs)
 
 Void PlayState_obj::create( ){
 {
-		HX_STACK_FRAME("PlayState","create",0x82220fed,"PlayState.create","PlayState.hx",30,0xb30d7781)
+		HX_STACK_FRAME("PlayState","create",0x82220fed,"PlayState.create","PlayState.hx",34,0xb30d7781)
 		HX_STACK_THIS(this)
-		HX_STACK_LINE(31)
-		::flixel::FlxG_obj::camera->bgColor = (int)-11250604;
-		HX_STACK_LINE(32)
-		::Reg_obj::state = hx::ObjectPtr<OBJ_>(this);
-		HX_STACK_LINE(34)
-		this->addLevel();
 		HX_STACK_LINE(35)
-		this->addPlayer();
+		::flixel::FlxG_obj::camera->bgColor = (int)-11250604;
 		HX_STACK_LINE(36)
-		this->addUIText();
+		::Reg_obj::state = hx::ObjectPtr<OBJ_>(this);
 		HX_STACK_LINE(38)
-		::Mob _g = ::Mob_obj::__new((int)120,(int)520);		HX_STACK_VAR(_g,"_g");
-		HX_STACK_LINE(38)
-		this->mob = _g;
+		this->addLevel();
 		HX_STACK_LINE(39)
-		::Mob _g1 = ::Mob_obj::__new((int)580,(int)520);		HX_STACK_VAR(_g1,"_g1");
-		HX_STACK_LINE(39)
-		this->mob2 = _g1;
+		this->addPlayer();
 		HX_STACK_LINE(40)
-		this->add(this->mob);
-		HX_STACK_LINE(41)
-		this->add(this->mob2);
-		HX_STACK_LINE(43)
+		this->addUIText();
+		HX_STACK_LINE(42)
+		::flixel::group::FlxGroup _g = ::flixel::group::FlxGroup_obj::__new(null());		HX_STACK_VAR(_g,"_g");
+		HX_STACK_LINE(42)
+		this->waves = _g;
+		HX_STACK_LINE(44)
+		::flixel::util::FlxTimer_obj::__new((int)2,this->addWave_dyn(),(int)8);
+		HX_STACK_LINE(46)
 		this->add(this->player->bullets);
-		HX_STACK_LINE(45)
+		HX_STACK_LINE(48)
 		this->super::create();
 	}
 return null();
@@ -118,9 +115,9 @@ return null();
 
 Void PlayState_obj::destroy( ){
 {
-		HX_STACK_FRAME("PlayState","destroy",0x6ec756e9,"PlayState.destroy","PlayState.hx",54,0xb30d7781)
+		HX_STACK_FRAME("PlayState","destroy",0x6ec756e9,"PlayState.destroy","PlayState.hx",57,0xb30d7781)
 		HX_STACK_THIS(this)
-		HX_STACK_LINE(54)
+		HX_STACK_LINE(57)
 		this->super::destroy();
 	}
 return null();
@@ -129,26 +126,20 @@ return null();
 
 Void PlayState_obj::update( ){
 {
-		HX_STACK_FRAME("PlayState","update",0x8d182efa,"PlayState.update","PlayState.hx",61,0xb30d7781)
+		HX_STACK_FRAME("PlayState","update",0x8d182efa,"PlayState.update","PlayState.hx",64,0xb30d7781)
 		HX_STACK_THIS(this)
-		HX_STACK_LINE(62)
-		this->setUIText();
-		HX_STACK_LINE(64)
-		::flixel::FlxG_obj::overlap(this->level,this->player,null(),::flixel::FlxObject_obj::separate_dyn());
 		HX_STACK_LINE(65)
-		::flixel::FlxG_obj::overlap(this->level,this->mob,null(),::flixel::FlxObject_obj::separate_dyn());
-		HX_STACK_LINE(66)
-		::flixel::FlxG_obj::overlap(this->level,this->mob2,null(),::flixel::FlxObject_obj::separate_dyn());
+		this->setUIText();
 		HX_STACK_LINE(67)
-		::flixel::FlxG_obj::overlap(this->player->bullets,this->level,this->bulletHitMap_dyn(),::flixel::FlxObject_obj::separate_dyn());
+		::flixel::FlxG_obj::overlap(this->level,this->player,null(),::flixel::FlxObject_obj::separate_dyn());
 		HX_STACK_LINE(68)
-		::flixel::FlxG_obj::overlap(this->player->bullets,this->mob,this->bulletHitMob_dyn(),::flixel::FlxObject_obj::separate_dyn());
+		::flixel::FlxG_obj::overlap(this->level,this->waves,null(),::flixel::FlxObject_obj::separate_dyn());
 		HX_STACK_LINE(69)
-		::flixel::FlxG_obj::overlap(this->player->bullets,this->mob2,this->bulletHitMob_dyn(),::flixel::FlxObject_obj::separate_dyn());
+		::flixel::FlxG_obj::overlap(this->player->bullets,this->level,this->bulletHitMap_dyn(),::flixel::FlxObject_obj::separate_dyn());
 		HX_STACK_LINE(70)
-		::flixel::FlxG_obj::overlap(this->mob,this->player,this->enemyPlayerOverlap_dyn(),::flixel::FlxObject_obj::separate_dyn());
+		::flixel::FlxG_obj::overlap(this->player->bullets,this->waves,this->bulletHitMob_dyn(),::flixel::FlxObject_obj::separate_dyn());
 		HX_STACK_LINE(71)
-		::flixel::FlxG_obj::overlap(this->mob2,this->player,this->enemyPlayerOverlap_dyn(),::flixel::FlxObject_obj::separate_dyn());
+		::flixel::FlxG_obj::overlap(this->waves,this->player,this->enemyPlayerOverlap_dyn(),::flixel::FlxObject_obj::separate_dyn());
 		HX_STACK_LINE(73)
 		this->super::update();
 	}
@@ -194,19 +185,41 @@ return null();
 
 HX_DEFINE_DYNAMIC_FUNC0(PlayState_obj,addPlayer,(void))
 
+Void PlayState_obj::addWave( ::flixel::util::FlxTimer _){
+{
+		HX_STACK_FRAME("PlayState","addWave",0xd570d269,"PlayState.addWave","PlayState.hx",90,0xb30d7781)
+		HX_STACK_THIS(this)
+		HX_STACK_ARG(_,"_")
+		HX_STACK_LINE(91)
+		::Mob _g = ::Mob_obj::__new((int)10,(int)550);		HX_STACK_VAR(_g,"_g");
+		HX_STACK_LINE(91)
+		this->waves->add(_g);
+		HX_STACK_LINE(92)
+		::Mob _g1 = ::Mob_obj::__new((int)780,(int)550);		HX_STACK_VAR(_g1,"_g1");
+		HX_STACK_LINE(92)
+		this->waves->add(_g1);
+		HX_STACK_LINE(93)
+		this->add(this->waves);
+	}
+return null();
+}
+
+
+HX_DEFINE_DYNAMIC_FUNC1(PlayState_obj,addWave,(void))
+
 Void PlayState_obj::addUIText( ){
 {
-		HX_STACK_FRAME("PlayState","addUIText",0xfc4b81b1,"PlayState.addUIText","PlayState.hx",90,0xb30d7781)
+		HX_STACK_FRAME("PlayState","addUIText",0xfc4b81b1,"PlayState.addUIText","PlayState.hx",97,0xb30d7781)
 		HX_STACK_THIS(this)
-		HX_STACK_LINE(91)
+		HX_STACK_LINE(98)
 		::flixel::text::FlxText _g = ::flixel::text::FlxText_obj::__new((int)0,(int)580,::flixel::FlxG_obj::width,null(),null(),null());		HX_STACK_VAR(_g,"_g");
-		HX_STACK_LINE(91)
+		HX_STACK_LINE(98)
 		this->healthText = _g;
-		HX_STACK_LINE(92)
+		HX_STACK_LINE(99)
 		this->healthText->scrollFactor->set(null(),null());
-		HX_STACK_LINE(93)
+		HX_STACK_LINE(100)
 		this->healthText->setFormat(null(),(int)8,(int)14610134,HX_CSTRING("right"),(int)1,(int)5130830,null());
-		HX_STACK_LINE(94)
+		HX_STACK_LINE(101)
 		this->add(this->healthText);
 	}
 return null();
@@ -217,9 +230,9 @@ HX_DEFINE_DYNAMIC_FUNC0(PlayState_obj,addUIText,(void))
 
 Void PlayState_obj::setUIText( ){
 {
-		HX_STACK_FRAME("PlayState","setUIText",0xa3cec1f2,"PlayState.setUIText","PlayState.hx",99,0xb30d7781)
+		HX_STACK_FRAME("PlayState","setUIText",0xa3cec1f2,"PlayState.setUIText","PlayState.hx",106,0xb30d7781)
 		HX_STACK_THIS(this)
-		HX_STACK_LINE(99)
+		HX_STACK_LINE(106)
 		this->healthText->set_text((HX_CSTRING("HEALTH: ") + this->player->health));
 	}
 return null();
@@ -230,15 +243,15 @@ HX_DEFINE_DYNAMIC_FUNC0(PlayState_obj,setUIText,(void))
 
 Void PlayState_obj::enemyPlayerOverlap( ::flixel::FlxObject mobRef,::flixel::FlxObject playerRef){
 {
-		HX_STACK_FRAME("PlayState","enemyPlayerOverlap",0xcd5f5d2f,"PlayState.enemyPlayerOverlap","PlayState.hx",103,0xb30d7781)
+		HX_STACK_FRAME("PlayState","enemyPlayerOverlap",0xcd5f5d2f,"PlayState.enemyPlayerOverlap","PlayState.hx",110,0xb30d7781)
 		HX_STACK_THIS(this)
 		HX_STACK_ARG(mobRef,"mobRef")
 		HX_STACK_ARG(playerRef,"playerRef")
-		HX_STACK_LINE(104)
+		HX_STACK_LINE(111)
 		hx::SubEq(playerRef->health,(int)1);
-		HX_STACK_LINE(106)
+		HX_STACK_LINE(113)
 		if (((playerRef->health <= (int)0))){
-			HX_STACK_LINE(106)
+			HX_STACK_LINE(113)
 			playerRef->kill();
 		}
 	}
@@ -250,11 +263,11 @@ HX_DEFINE_DYNAMIC_FUNC2(PlayState_obj,enemyPlayerOverlap,(void))
 
 Void PlayState_obj::bulletHitMap( ::flixel::FlxObject bulletRef,::flixel::FlxObject mapRef){
 {
-		HX_STACK_FRAME("PlayState","bulletHitMap",0x3db4899c,"PlayState.bulletHitMap","PlayState.hx",111,0xb30d7781)
+		HX_STACK_FRAME("PlayState","bulletHitMap",0x3db4899c,"PlayState.bulletHitMap","PlayState.hx",118,0xb30d7781)
 		HX_STACK_THIS(this)
 		HX_STACK_ARG(bulletRef,"bulletRef")
 		HX_STACK_ARG(mapRef,"mapRef")
-		HX_STACK_LINE(111)
+		HX_STACK_LINE(118)
 		this->player->bullets->remove(bulletRef,null());
 	}
 return null();
@@ -265,17 +278,17 @@ HX_DEFINE_DYNAMIC_FUNC2(PlayState_obj,bulletHitMap,(void))
 
 Void PlayState_obj::bulletHitMob( ::flixel::FlxObject bulletRef,::flixel::FlxObject mobRef){
 {
-		HX_STACK_FRAME("PlayState","bulletHitMob",0x3db495c0,"PlayState.bulletHitMob","PlayState.hx",115,0xb30d7781)
+		HX_STACK_FRAME("PlayState","bulletHitMob",0x3db495c0,"PlayState.bulletHitMob","PlayState.hx",122,0xb30d7781)
 		HX_STACK_THIS(this)
 		HX_STACK_ARG(bulletRef,"bulletRef")
 		HX_STACK_ARG(mobRef,"mobRef")
-		HX_STACK_LINE(116)
+		HX_STACK_LINE(123)
 		this->player->bullets->remove(bulletRef,null());
-		HX_STACK_LINE(117)
+		HX_STACK_LINE(124)
 		hx::SubEq(mobRef->health,(int)20);
-		HX_STACK_LINE(119)
+		HX_STACK_LINE(126)
 		if (((mobRef->health <= (int)0))){
-			HX_STACK_LINE(119)
+			HX_STACK_LINE(126)
 			mobRef->kill();
 		}
 	}
@@ -296,8 +309,8 @@ void PlayState_obj::__Mark(HX_MARK_PARAMS)
 	HX_MARK_MEMBER_NAME(level,"level");
 	HX_MARK_MEMBER_NAME(player,"player");
 	HX_MARK_MEMBER_NAME(healthText,"healthText");
+	HX_MARK_MEMBER_NAME(waves,"waves");
 	HX_MARK_MEMBER_NAME(mob,"mob");
-	HX_MARK_MEMBER_NAME(mob2,"mob2");
 	::flixel::FlxState_obj::__Mark(HX_MARK_ARG);
 	HX_MARK_END_CLASS();
 }
@@ -307,8 +320,8 @@ void PlayState_obj::__Visit(HX_VISIT_PARAMS)
 	HX_VISIT_MEMBER_NAME(level,"level");
 	HX_VISIT_MEMBER_NAME(player,"player");
 	HX_VISIT_MEMBER_NAME(healthText,"healthText");
+	HX_VISIT_MEMBER_NAME(waves,"waves");
 	HX_VISIT_MEMBER_NAME(mob,"mob");
-	HX_VISIT_MEMBER_NAME(mob2,"mob2");
 	::flixel::FlxState_obj::__Visit(HX_VISIT_ARG);
 }
 
@@ -318,11 +331,9 @@ Dynamic PlayState_obj::__Field(const ::String &inName,bool inCallProp)
 	case 3:
 		if (HX_FIELD_EQ(inName,"mob") ) { return mob; }
 		break;
-	case 4:
-		if (HX_FIELD_EQ(inName,"mob2") ) { return mob2; }
-		break;
 	case 5:
 		if (HX_FIELD_EQ(inName,"level") ) { return level; }
+		if (HX_FIELD_EQ(inName,"waves") ) { return waves; }
 		break;
 	case 6:
 		if (HX_FIELD_EQ(inName,"player") ) { return player; }
@@ -331,6 +342,7 @@ Dynamic PlayState_obj::__Field(const ::String &inName,bool inCallProp)
 		break;
 	case 7:
 		if (HX_FIELD_EQ(inName,"destroy") ) { return destroy_dyn(); }
+		if (HX_FIELD_EQ(inName,"addWave") ) { return addWave_dyn(); }
 		break;
 	case 8:
 		if (HX_FIELD_EQ(inName,"addLevel") ) { return addLevel_dyn(); }
@@ -359,11 +371,9 @@ Dynamic PlayState_obj::__SetField(const ::String &inName,const Dynamic &inValue,
 	case 3:
 		if (HX_FIELD_EQ(inName,"mob") ) { mob=inValue.Cast< ::Mob >(); return inValue; }
 		break;
-	case 4:
-		if (HX_FIELD_EQ(inName,"mob2") ) { mob2=inValue.Cast< ::Mob >(); return inValue; }
-		break;
 	case 5:
 		if (HX_FIELD_EQ(inName,"level") ) { level=inValue.Cast< ::flixel::tile::FlxTilemap >(); return inValue; }
+		if (HX_FIELD_EQ(inName,"waves") ) { waves=inValue.Cast< ::flixel::group::FlxGroup >(); return inValue; }
 		break;
 	case 6:
 		if (HX_FIELD_EQ(inName,"player") ) { player=inValue.Cast< ::Player >(); return inValue; }
@@ -379,8 +389,8 @@ void PlayState_obj::__GetFields(Array< ::String> &outFields)
 	outFields->push(HX_CSTRING("level"));
 	outFields->push(HX_CSTRING("player"));
 	outFields->push(HX_CSTRING("healthText"));
+	outFields->push(HX_CSTRING("waves"));
 	outFields->push(HX_CSTRING("mob"));
-	outFields->push(HX_CSTRING("mob2"));
 	super::__GetFields(outFields);
 };
 
@@ -392,8 +402,8 @@ static hx::StorageInfo sMemberStorageInfo[] = {
 	{hx::fsObject /*::flixel::tile::FlxTilemap*/ ,(int)offsetof(PlayState_obj,level),HX_CSTRING("level")},
 	{hx::fsObject /*::Player*/ ,(int)offsetof(PlayState_obj,player),HX_CSTRING("player")},
 	{hx::fsObject /*::flixel::text::FlxText*/ ,(int)offsetof(PlayState_obj,healthText),HX_CSTRING("healthText")},
+	{hx::fsObject /*::flixel::group::FlxGroup*/ ,(int)offsetof(PlayState_obj,waves),HX_CSTRING("waves")},
 	{hx::fsObject /*::Mob*/ ,(int)offsetof(PlayState_obj,mob),HX_CSTRING("mob")},
-	{hx::fsObject /*::Mob*/ ,(int)offsetof(PlayState_obj,mob2),HX_CSTRING("mob2")},
 	{ hx::fsUnknown, 0, null()}
 };
 #endif
@@ -402,13 +412,14 @@ static ::String sMemberFields[] = {
 	HX_CSTRING("level"),
 	HX_CSTRING("player"),
 	HX_CSTRING("healthText"),
+	HX_CSTRING("waves"),
 	HX_CSTRING("mob"),
-	HX_CSTRING("mob2"),
 	HX_CSTRING("create"),
 	HX_CSTRING("destroy"),
 	HX_CSTRING("update"),
 	HX_CSTRING("addLevel"),
 	HX_CSTRING("addPlayer"),
+	HX_CSTRING("addWave"),
 	HX_CSTRING("addUIText"),
 	HX_CSTRING("setUIText"),
 	HX_CSTRING("enemyPlayerOverlap"),

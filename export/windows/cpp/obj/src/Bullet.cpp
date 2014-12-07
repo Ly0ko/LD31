@@ -3,6 +3,12 @@
 #ifndef INCLUDED_Bullet
 #include <Bullet.h>
 #endif
+#ifndef INCLUDED_PlayState
+#include <PlayState.h>
+#endif
+#ifndef INCLUDED_Reg
+#include <Reg.h>
+#endif
 #ifndef INCLUDED_flixel_FlxBasic
 #include <flixel/FlxBasic.h>
 #endif
@@ -12,11 +18,23 @@
 #ifndef INCLUDED_flixel_FlxSprite
 #include <flixel/FlxSprite.h>
 #endif
+#ifndef INCLUDED_flixel_FlxState
+#include <flixel/FlxState.h>
+#endif
+#ifndef INCLUDED_flixel_group_FlxGroup
+#include <flixel/group/FlxGroup.h>
+#endif
+#ifndef INCLUDED_flixel_group_FlxTypedGroup
+#include <flixel/group/FlxTypedGroup.h>
+#endif
 #ifndef INCLUDED_flixel_interfaces_IFlxDestroyable
 #include <flixel/interfaces/IFlxDestroyable.h>
 #endif
 #ifndef INCLUDED_flixel_interfaces_IFlxPooled
 #include <flixel/interfaces/IFlxPooled.h>
+#endif
+#ifndef INCLUDED_flixel_tile_FlxTilemap
+#include <flixel/tile/FlxTilemap.h>
 #endif
 #ifndef INCLUDED_flixel_util_FlxPoint
 #include <flixel/util/FlxPoint.h>
@@ -55,6 +73,51 @@ Dynamic Bullet_obj::__Create(hx::DynamicArray inArgs)
 	result->__construct(inArgs[0],inArgs[1]);
 	return result;}
 
+Void Bullet_obj::update( ){
+{
+		HX_STACK_FRAME("Bullet","update",0xa9584695,"Bullet.update","Bullet.hx",21,0xb42ce59c)
+		HX_STACK_THIS(this)
+		HX_STACK_LINE(22)
+		this->levelConstraints();
+		HX_STACK_LINE(24)
+		this->super::update();
+	}
+return null();
+}
+
+
+Void Bullet_obj::levelConstraints( ){
+{
+		HX_STACK_FRAME("Bullet","levelConstraints",0x0ffbe1de,"Bullet.levelConstraints","Bullet.hx",28,0xb42ce59c)
+		HX_STACK_THIS(this)
+		struct _Function_1_1{
+			inline static bool Block( hx::ObjectPtr< ::Bullet_obj > __this){
+				HX_STACK_FRAME("*","closure",0x5bdab937,"*.closure","Bullet.hx",28,0xb42ce59c)
+				{
+					HX_STACK_LINE(28)
+					Float _g = ::Reg_obj::state->level->get_width();		HX_STACK_VAR(_g,"_g");
+					HX_STACK_LINE(28)
+					Float _g1 = __this->get_width();		HX_STACK_VAR(_g1,"_g1");
+					HX_STACK_LINE(28)
+					Float _g2 = (_g - _g1);		HX_STACK_VAR(_g2,"_g2");
+					HX_STACK_LINE(28)
+					return (__this->x > _g2);
+				}
+				return null();
+			}
+		};
+		HX_STACK_LINE(28)
+		if (((  ((!(((this->x < (int)0))))) ? bool(_Function_1_1::Block(this)) : bool(true) ))){
+			HX_STACK_LINE(28)
+			this->kill();
+		}
+	}
+return null();
+}
+
+
+HX_DEFINE_DYNAMIC_FUNC0(Bullet_obj,levelConstraints,(void))
+
 
 Bullet_obj::Bullet_obj()
 {
@@ -63,8 +126,14 @@ Bullet_obj::Bullet_obj()
 Dynamic Bullet_obj::__Field(const ::String &inName,bool inCallProp)
 {
 	switch(inName.length) {
+	case 6:
+		if (HX_FIELD_EQ(inName,"update") ) { return update_dyn(); }
+		break;
 	case 9:
 		if (HX_FIELD_EQ(inName,"_velocity") ) { return _velocity; }
+		break;
+	case 16:
+		if (HX_FIELD_EQ(inName,"levelConstraints") ) { return levelConstraints_dyn(); }
 	}
 	return super::__Field(inName,inCallProp);
 }
@@ -96,6 +165,8 @@ static hx::StorageInfo sMemberStorageInfo[] = {
 
 static ::String sMemberFields[] = {
 	HX_CSTRING("_velocity"),
+	HX_CSTRING("update"),
+	HX_CSTRING("levelConstraints"),
 	String(null()) };
 
 static void sMarkStatics(HX_MARK_PARAMS) {

@@ -57,7 +57,7 @@ HX_STACK_ARG(x,"x")
 HX_STACK_ARG(y,"y")
 {
 	HX_STACK_LINE(16)
-	this->_health = (int)100;
+	this->_health = (int)140;
 	HX_STACK_LINE(14)
 	this->_maxFallSpeed = (int)800;
 	HX_STACK_LINE(13)
@@ -67,7 +67,7 @@ HX_STACK_ARG(y,"y")
 	HX_STACK_LINE(20)
 	super::__construct(x,y,null());
 	HX_STACK_LINE(22)
-	this->makeGraphic((int)16,(int)16,(int)-65536,null(),null());
+	this->makeGraphic((int)16,(int)20,(int)-65536,null(),null());
 	HX_STACK_LINE(23)
 	this->health = this->_health;
 	HX_STACK_LINE(24)

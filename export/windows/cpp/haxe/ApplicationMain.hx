@@ -127,7 +127,7 @@ class ApplicationMain {
 			(false ? flash.Lib.FULLSCREEN : 0) |
 			(0 == 4 ? flash.Lib.HW_AA_HIRES : 0) |
 			(0 == 2 ? flash.Lib.HW_AA : 0),
-			"LD31",
+			"Survive On One Screen",
 			null
 			#if mobile, ScaledStage #end
 		);
@@ -311,7 +311,7 @@ class ApplicationMain {
 		wx.App.boot (function () {
 			
 			
-			frame = wx.Frame.create (null, null, "LD31", null, { width: 640, height: 480 });
+			frame = wx.Frame.create (null, null, "Survive On One Screen", null, { width: 640, height: 480 });
 			
 			
 			#if openfl

@@ -183,7 +183,7 @@ Void ApplicationMain_obj::main( ){
 		HX_END_LOCAL_FUNC0((void))
 
 		HX_STACK_LINE(38)
-		::openfl::_v2::Lib_obj::create( Dynamic(new _Function_1_1()),(int)640,(int)480,(int)60,(int)0,(int((int((int((int((int((int((int((int((int((int(::openfl::_v2::Lib_obj::HARDWARE) | int(::openfl::_v2::Lib_obj::ALLOW_SHADERS))) | int((int)0))) | int((int)0))) | int((int)0))) | int(::openfl::_v2::Lib_obj::RESIZABLE))) | int((int)0))) | int(::openfl::_v2::Lib_obj::VSYNC))) | int((int)0))) | int((int)0))) | int((int)0)),HX_CSTRING("LD31"),null(),null());
+		::openfl::_v2::Lib_obj::create( Dynamic(new _Function_1_1()),(int)640,(int)480,(int)60,(int)0,(int((int((int((int((int((int((int((int((int((int(::openfl::_v2::Lib_obj::HARDWARE) | int(::openfl::_v2::Lib_obj::ALLOW_SHADERS))) | int((int)0))) | int((int)0))) | int((int)0))) | int(::openfl::_v2::Lib_obj::RESIZABLE))) | int((int)0))) | int(::openfl::_v2::Lib_obj::VSYNC))) | int((int)0))) | int((int)0))) | int((int)0)),HX_CSTRING("Survive On One Screen"),null(),null());
 	}
 return null();
 }

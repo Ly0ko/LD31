@@ -2992,16 +2992,21 @@ PlayState.prototype = $extend(flixel.FlxState.prototype,{
 	level: null
 	,player: null
 	,healthText: null
+	,killsText: null
+	,kills: null
 	,waves: null
 	,mob: null
 	,create: function() {
+		flixel.FlxG.camera.set_antialiasing(true);
 		flixel.FlxG.camera.bgColor = -11250604;
 		Reg.state = this;
 		this.addLevel();
 		this.addPlayer();
 		this.addUIText();
+		this.kills = 0;
 		this.waves = new flixel.group.FlxGroup();
-		new flixel.util.FlxTimer(2,$bind(this,this.addWave),8);
+		new flixel.util.FlxTimer(2,$bind(this,this.addWave),5);
+		new flixel.util.FlxTimer(15,$bind(this,this.waveTimer),0);
 		this.add(this.player.bullets);
 		flixel.FlxState.prototype.create.call(this);
 	}
@@ -3015,6 +3020,9 @@ PlayState.prototype = $extend(flixel.FlxState.prototype,{
 		flixel.FlxG.overlap(this.player.bullets,this.level,$bind(this,this.bulletHitMap),flixel.FlxObject.separate);
 		flixel.FlxG.overlap(this.player.bullets,this.waves,$bind(this,this.bulletHitMob),flixel.FlxObject.separate);
 		flixel.FlxG.overlap(this.waves,this.player,$bind(this,this.enemyPlayerOverlap),flixel.FlxObject.separate);
+		if(this.player.exists == false) {
+			if(flixel.FlxG.keys.justPressed.get_ANY()) this.restart();
+		}
 		flixel.FlxState.prototype.update.call(this);
 	}
 	,addLevel: function() {
@@ -3031,17 +3039,25 @@ PlayState.prototype = $extend(flixel.FlxState.prototype,{
 		this.waves.add(new Mob(780,550));
 		this.add(this.waves);
 	}
+	,waveTimer: function(_) {
+		new flixel.util.FlxTimer(2,$bind(this,this.addWave),6);
+	}
 	,addUIText: function() {
 		this.healthText = new flixel.text.FlxText(0,580,flixel.FlxG.width);
 		this.healthText.scrollFactor.set();
 		this.healthText.setFormat(null,8,14610134,"right",1,5130830);
 		this.add(this.healthText);
+		this.killsText = new flixel.text.FlxText(0,580,flixel.FlxG.width);
+		this.killsText.scrollFactor.set();
+		this.killsText.setFormat(null,8,14610134,"center",1,5130830);
+		this.add(this.killsText);
 	}
 	,setUIText: function() {
 		this.healthText.set_text("HEALTH: " + this.player.health);
+		this.killsText.set_text("KILLS: " + this.kills);
 	}
 	,enemyPlayerOverlap: function(mobRef,playerRef) {
-		playerRef.health -= 1;
+		playerRef.health -= 0.5;
 		if(playerRef.health <= 0) playerRef.kill();
 	}
 	,bulletHitMap: function(bulletRef,mapRef) {
@@ -3050,12 +3066,29 @@ PlayState.prototype = $extend(flixel.FlxState.prototype,{
 	,bulletHitMob: function(bulletRef,mobRef) {
 		this.player.bullets.remove(bulletRef);
 		mobRef.health -= 20;
-		if(mobRef.health <= 0) mobRef.kill();
+		if(mobRef.health <= 0) {
+			this.kills++;
+			mobRef.kill();
+		}
+	}
+	,gameOver: function(t) {
+		var gameOverText = new flixel.text.FlxText(0,0,0,"GAME OVER");
+		var restartText = new flixel.text.FlxText(0,350,0,"Press any key to restart.");
+		gameOverText.scrollFactor.set(0,0);
+		flixel.util.FlxSpriteUtil.screenCenter(gameOverText);
+		this.add(gameOverText);
+		restartText.scrollFactor.set(0,0);
+		restartText.set_size(8);
+		flixel.util.FlxSpriteUtil.screenCenter(restartText,true,false);
+		this.add(restartText);
+	}
+	,restart: function() {
+		flixel.FlxG.switchState(new PlayState());
 	}
 	,__class__: PlayState
 });
 var Player = function(x,y) {
-	this._health = 100000000;
+	this._health = 100;
 	this._jumpforce = 420;
 	this._maxFallSpeed = 800;
 	this._gravity = 1600;
@@ -3064,6 +3097,9 @@ var Player = function(x,y) {
 	this._maxSpeed = 200;
 	flixel.FlxSprite.call(this,x,y);
 	this.loadGraphic("assets/images/player.png",true,32,32);
+	this.animation.add("idle",[0]);
+	this.animation.add("walking",[0,1,2,3,4,5,6,7],13);
+	this.animation.add("jumping",[8]);
 	this._facingFlip.set(1,{ x : true, y : false});
 	this._facingFlip.set(16,{ x : false, y : false});
 	this._shootSound = flixel.FlxG.sound.load("assets/sounds/shoot.wav",0.4);
@@ -3091,6 +3127,7 @@ Player.prototype = $extend(flixel.FlxSprite.prototype,{
 	,_shootSound: null
 	,update: function() {
 		this.controls();
+		this.animate();
 		this.levelConstraints();
 		flixel.FlxSprite.prototype.update.call(this);
 	}
@@ -3101,6 +3138,7 @@ Player.prototype = $extend(flixel.FlxSprite.prototype,{
 		this.acceleration.set_y(1200);
 		this.velocity.set_y(-200);
 		this.allowCollisions = 0;
+		new flixel.util.FlxTimer(1,($_=Reg.state,$bind($_,$_.gameOver)));
 	}
 	,finishKill: function(_) {
 		this.set_exists(false);
@@ -3139,6 +3177,9 @@ Player.prototype = $extend(flixel.FlxSprite.prototype,{
 			this._shootSound.setPosition(this.x,this.y);
 			this._shootSound.play(true);
 		}
+	}
+	,animate: function() {
+		if(this.velocity.x == 0) this.animation.play("idle"); else if(!((this.touching & 4096) > 0)) this.animation.play("jumping"); else this.animation.play("walking");
 	}
 	,levelConstraints: function() {
 		if(this.x < 0 || this.x > Reg.state.level.get_width() - this.get_width()) this.velocity.set_x(0);
@@ -22162,7 +22203,7 @@ flixel.system.debug._Window.GraphicCloseButton.preload();
 flixel.tile.GraphicAuto.preload();
 flixel.tile.GraphicAutoAlt.preload();
 flixel.ui._FlxTypedButton.GraphicButton.preload();
-ApplicationMain.config = { antialiasing : 0, background : 0, borderless : false, depthBuffer : false, fps : 60, fullscreen : false, height : 480, orientation : "portrait", resizable : true, stencilBuffer : false, title : "LD31", vsync : true, width : 640};
+ApplicationMain.config = { antialiasing : 0, background : 0, borderless : false, depthBuffer : false, fps : 60, fullscreen : false, height : 480, orientation : "portrait", resizable : true, stencilBuffer : false, title : "Survive On One Screen", vsync : true, width : 640};
 ApplicationMain.embeds = 0;
 flixel.util.FlxRect._pool = new flixel.util.FlxPool_flixel_util_FlxRect(flixel.util.FlxRect);
 flixel.FlxObject.SEPARATE_BIAS = 4;

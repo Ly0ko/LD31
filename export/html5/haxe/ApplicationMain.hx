@@ -26,7 +26,7 @@ class ApplicationMain {
 		orientation: "portrait",
 		resizable: true,
 		stencilBuffer: false,
-		title: "LD31",
+		title: "Survive On One Screen",
 		vsync: true,
 		width: Std.int(640),
 	};

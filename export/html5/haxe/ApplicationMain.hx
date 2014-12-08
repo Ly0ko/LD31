@@ -73,6 +73,7 @@ class ApplicationMain {
 		loadBinary("assets/data/map.csv");
 		loadBinary("assets/images/images-go-here.txt");
 		loadFile("assets/images/mapTiles.png");
+		loadFile("assets/images/player.png");
 		loadBinary("assets/music/music-goes-here.txt");
 		loadSound("assets/sounds/shoot.wav");
 		loadBinary("assets/sounds/sounds-go-here.txt");

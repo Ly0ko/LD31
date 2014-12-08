@@ -46,6 +46,8 @@ class HXCPP_CLASS_ATTRIBUTES  PlayState_obj : public ::flixel::FlxState_obj{
 		::flixel::tile::FlxTilemap level;
 		::Player player;
 		::flixel::text::FlxText healthText;
+		::flixel::text::FlxText killsText;
+		int kills;
 		::flixel::group::FlxGroup waves;
 		::Mob mob;
 		virtual Void create( );
@@ -63,6 +65,9 @@ class HXCPP_CLASS_ATTRIBUTES  PlayState_obj : public ::flixel::FlxState_obj{
 		virtual Void addWave( ::flixel::util::FlxTimer _);
 		Dynamic addWave_dyn();
 
+		virtual Void waveTimer( ::flixel::util::FlxTimer _);
+		Dynamic waveTimer_dyn();
+
 		virtual Void addUIText( );
 		Dynamic addUIText_dyn();
 
@@ -77,6 +82,12 @@ class HXCPP_CLASS_ATTRIBUTES  PlayState_obj : public ::flixel::FlxState_obj{
 
 		virtual Void bulletHitMob( ::flixel::FlxObject bulletRef,::flixel::FlxObject mobRef);
 		Dynamic bulletHitMob_dyn();
+
+		virtual Void gameOver( ::flixel::util::FlxTimer t);
+		Dynamic gameOver_dyn();
+
+		virtual Void restart( );
+		Dynamic restart_dyn();
 
 };
 

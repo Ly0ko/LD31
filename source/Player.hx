@@ -20,7 +20,7 @@ class Player extends FlxSprite
 	var _maxFallSpeed:Int = 800;
 	var _jumpforce:Int = 420;
 
-	public var _health:Int = 100000000;
+	public var _health:Int = 100;
 
 	public var bullets:FlxGroup;
 	var bullet:Bullet;
@@ -31,8 +31,11 @@ class Player extends FlxSprite
 	public function new(x:Float, y:Float)
 	{
 		super(x, y);
-		// makeGraphic(16, 32, 0xff0000ff);
 		loadGraphic("assets/images/player.png", true, 32, 32);
+
+		animation.add("idle", [0]);
+		animation.add("walking", [0, 1, 2, 3, 4, 5, 6, 7], 13);
+		animation.add("jumping", [8]);
 
 		setFacingFlip(FlxObject.LEFT, true, false);
 		setFacingFlip(FlxObject.RIGHT, false, false);
@@ -52,8 +55,8 @@ class Player extends FlxSprite
 
 	override public function update():Void
 	{
-		
 		controls();
+		animate();
 		levelConstraints();
 
 		super.update();
@@ -67,6 +70,7 @@ class Player extends FlxSprite
 		acceleration.y = 1200;
 		velocity.y = -200;
 		allowCollisions = FlxObject.NONE;
+		new FlxTimer(1, Reg.state.gameOver);
 	}
 
 	function finishKill(_):Void
@@ -119,6 +123,13 @@ class Player extends FlxSprite
 			_shootSound.setPosition(x, y);
 			_shootSound.play(true);
 		}
+	}
+
+	function animate():Void
+	{
+		if (velocity.x == 0) animation.play("idle");
+		else if(!isTouching(FlxObject.FLOOR)) animation.play("jumping");
+		else animation.play("walking");
 	}
 
 	function levelConstraints():Void

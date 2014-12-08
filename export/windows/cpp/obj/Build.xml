@@ -2864,6 +2864,7 @@
    <depend name="include/flixel/FlxObject.h"/>
    <depend name="include/flixel/FlxSprite.h"/>
    <depend name="include/flixel/FlxState.h"/>
+   <depend name="include/flixel/animation/FlxAnimationController.h"/>
    <depend name="include/flixel/group/FlxGroup.h"/>
    <depend name="include/flixel/group/FlxTypedGroup.h"/>
    <depend name="include/flixel/input/keyboard/FlxKeyList.h"/>
@@ -2878,6 +2879,7 @@
    <depend name="include/flixel/tweens/FlxTween.h"/>
    <depend name="include/flixel/tweens/misc/VarTween.h"/>
    <depend name="include/flixel/util/FlxPoint.h"/>
+   <depend name="include/flixel/util/FlxTimer.h"/>
    <depend name="include/haxe/ds/IntMap.h"/>
   </file>
   <file name="src/PlayState.cpp">
@@ -2888,18 +2890,30 @@
    <depend name="include/flixel/FlxBasic.h"/>
    <depend name="include/flixel/FlxCamera.h"/>
    <depend name="include/flixel/FlxG.h"/>
+   <depend name="include/flixel/FlxGame.h"/>
    <depend name="include/flixel/FlxObject.h"/>
    <depend name="include/flixel/FlxSprite.h"/>
    <depend name="include/flixel/FlxState.h"/>
    <depend name="include/flixel/group/FlxGroup.h"/>
    <depend name="include/flixel/group/FlxTypedGroup.h"/>
+   <depend name="include/flixel/input/keyboard/FlxKeyList.h"/>
+   <depend name="include/flixel/input/keyboard/FlxKeyboard.h"/>
    <depend name="include/flixel/interfaces/IFlxDestroyable.h"/>
+   <depend name="include/flixel/interfaces/IFlxInput.h"/>
    <depend name="include/flixel/interfaces/IFlxPooled.h"/>
    <depend name="include/flixel/text/FlxText.h"/>
    <depend name="include/flixel/tile/FlxTilemap.h"/>
    <depend name="include/flixel/util/FlxPoint.h"/>
+   <depend name="include/flixel/util/FlxSpriteUtil.h"/>
    <depend name="include/flixel/util/FlxTimer.h"/>
    <depend name="include/openfl/_v2/Assets.h"/>
+   <depend name="include/openfl/_v2/display/DisplayObject.h"/>
+   <depend name="include/openfl/_v2/display/DisplayObjectContainer.h"/>
+   <depend name="include/openfl/_v2/display/IBitmapDrawable.h"/>
+   <depend name="include/openfl/_v2/display/InteractiveObject.h"/>
+   <depend name="include/openfl/_v2/display/Sprite.h"/>
+   <depend name="include/openfl/_v2/events/EventDispatcher.h"/>
+   <depend name="include/openfl/_v2/events/IEventDispatcher.h"/>
   </file>
   <file name="src/flixel/FlxState.cpp">
    <depend name="include/flixel/FlxBasic.h"/>

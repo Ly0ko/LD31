@@ -4,12 +4,14 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.FlxObject;
+import flixel.FlxCamera;
 import flixel.group.FlxGroup;
 import flixel.tile.FlxTilemap;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxMath;
 import flixel.util.FlxStringUtil;
+import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
 import openfl.Assets;
 
@@ -23,6 +25,8 @@ class PlayState extends FlxState
 	public var player:Player;
 
 	var healthText:FlxText;
+	var killsText:FlxText;
+	var kills:Int;
 
 	var waves:FlxGroup;
 	var mob:Mob;
@@ -32,6 +36,7 @@ class PlayState extends FlxState
 	 */
 	override public function create():Void
 	{
+		FlxG.camera.antialiasing = true;
 		FlxG.camera.bgColor = 0xff545454;
 		Reg.state = this;
 
@@ -39,9 +44,12 @@ class PlayState extends FlxState
 		addPlayer();
 		addUIText();
 
+		kills = 0;
+
 		waves = new FlxGroup();
 
-		new FlxTimer(2, addWave, 8);
+		new FlxTimer(2, addWave, 5);
+		new FlxTimer(15, waveTimer, 0);
 
 		add(player.bullets);
 
@@ -70,6 +78,10 @@ class PlayState extends FlxState
 		FlxG.collide(player.bullets, waves, bulletHitMob);
 		FlxG.collide(waves, player, enemyPlayerOverlap);
 
+		if (player.exists == false) {
+			if (FlxG.keys.justPressed.ANY) restart();
+		}
+
 		super.update();
 	}	
 
@@ -86,11 +98,16 @@ class PlayState extends FlxState
 		add(player);
 	}
 
-	function addWave(_):Void
+	function addWave(?_):Void
 	{
 		waves.add(new Mob(10, 550));
 		waves.add(new Mob(780, 550));
 		add(waves);
+	}
+
+	function waveTimer(_):Void
+	{
+		new FlxTimer(2, addWave, 6);
 	}
 
 	function addUIText():Void
@@ -99,16 +116,22 @@ class PlayState extends FlxState
 		healthText.scrollFactor.set();
 		healthText.setFormat(null, 8, 0xdeeed6, "right", FlxText.BORDER_SHADOW, 0x4e4a4e);
 		add(healthText);
+
+		killsText = new FlxText(0, 580, FlxG.width);
+		killsText.scrollFactor.set();
+		killsText.setFormat(null, 8, 0xdeeed6, "center", FlxText.BORDER_SHADOW, 0x4e4a4e);
+		add(killsText);
 	}
 
 	function setUIText():Void
 	{
 		healthText.text = "HEALTH: " + player.health;
+		killsText.text = "KILLS: " + kills;
 	}
 
 	function enemyPlayerOverlap(mobRef:FlxObject, playerRef:FlxObject):Void
 	{
-		playerRef.health -= 1;
+		playerRef.health -= 0.5;
 
 		if (playerRef.health <= 0) playerRef.kill();
 	}
@@ -123,6 +146,29 @@ class PlayState extends FlxState
 		player.bullets.remove(bulletRef);
 		mobRef.health -= 20;
 
-		if (mobRef.health <= 0) mobRef.kill();
+		if (mobRef.health <= 0) {
+			kills++;
+			mobRef.kill();
+		}
+	}
+
+	public function gameOver(?t:FlxTimer):Void
+	{
+		var gameOverText:FlxText = new FlxText(0, 0, 0, "GAME OVER");
+		var restartText:FlxText = new FlxText(0, 350, 0, "Press any key to restart.");
+
+		gameOverText.scrollFactor.set(0, 0);
+		FlxSpriteUtil.screenCenter(gameOverText);
+		add(gameOverText);
+
+		restartText.scrollFactor.set(0, 0);
+		restartText.size = 8;
+		FlxSpriteUtil.screenCenter(restartText, true, false);
+		add(restartText);
+	}
+
+	function restart():Void 
+	{
+		FlxG.switchState(new PlayState());
 	}
 }

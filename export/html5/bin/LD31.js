@@ -34,6 +34,7 @@ ApplicationMain.preload = function() {
 	ApplicationMain.loadBinary("assets/data/map.csv");
 	ApplicationMain.loadBinary("assets/images/images-go-here.txt");
 	ApplicationMain.loadFile("assets/images/mapTiles.png");
+	ApplicationMain.loadFile("assets/images/player.png");
 	ApplicationMain.loadBinary("assets/music/music-goes-here.txt");
 	ApplicationMain.loadSound("assets/sounds/shoot.wav");
 	ApplicationMain.loadBinary("assets/sounds/sounds-go-here.txt");
@@ -736,7 +737,7 @@ var Main = function() {
 	this.startFullscreen = false;
 	this.skipSplash = true;
 	this.framerate = 60;
-	this.zoom = 4;
+	this.zoom = -1;
 	this.initialState = PlayState;
 	this.gameHeight = 600;
 	this.gameWidth = 800;
@@ -2136,6 +2137,13 @@ Bullet.__name__ = ["Bullet"];
 Bullet.__super__ = flixel.FlxSprite;
 Bullet.prototype = $extend(flixel.FlxSprite.prototype,{
 	_velocity: null
+	,update: function() {
+		this.levelConstraints();
+		flixel.FlxSprite.prototype.update.call(this);
+	}
+	,levelConstraints: function() {
+		if(this.x < 0 || this.x > Reg.state.level.get_width() - this.get_width()) this.kill();
+	}
 	,__class__: Bullet
 });
 var openfl = {};
@@ -2212,6 +2220,7 @@ var DefaultAssetLibrary = function() {
 	this.add("assets/data/map.csv",openfl.AssetType.TEXT);
 	this.add("assets/images/images-go-here.txt",openfl.AssetType.TEXT);
 	this.add("assets/images/mapTiles.png",openfl.AssetType.IMAGE);
+	this.add("assets/images/player.png",openfl.AssetType.IMAGE);
 	this.add("assets/music/music-goes-here.txt",openfl.AssetType.TEXT);
 	this.add("assets/sounds/shoot.wav",openfl.AssetType.SOUND);
 	this.add("assets/sounds/sounds-go-here.txt",openfl.AssetType.TEXT);
@@ -2488,12 +2497,12 @@ $hxClasses["IMap"] = IMap;
 IMap.__name__ = ["IMap"];
 Math.__name__ = ["Math"];
 var Mob = function(x,y) {
-	this._health = 100;
+	this._health = 140;
 	this._maxFallSpeed = 800;
 	this._gravity = 1600;
 	this.maxSpeed = 50;
 	flixel.FlxSprite.call(this,x,y);
-	this.makeGraphic(16,16,-65536);
+	this.makeGraphic(16,20,-65536);
 	this.health = this._health;
 	this.velocity.set_x(this.maxSpeed);
 	this.maxVelocity.set_y(this._maxFallSpeed);
@@ -2512,11 +2521,15 @@ Mob.prototype = $extend(flixel.FlxSprite.prototype,{
 		flixel.FlxSprite.prototype.update.call(this);
 	}
 	,kill: function() {
+		this.set_alive(false);
 		this.scale.set(1.5,1.5);
-		flixel.tweens.FlxTween.tween(this.scale,{ x : 1, y : 1},0.4,{ ease : flixel.tweens.FlxEase.elasticOut});
+		flixel.tweens.FlxTween.tween(this.scale,{ x : 1, y : 1},0.5,{ ease : flixel.tweens.FlxEase.elasticOut, complete : $bind(this,this.finishKill)});
 		this.acceleration.set_y(1200);
 		this.velocity.set_y(-200);
 		this.allowCollisions = 0;
+	}
+	,finishKill: function(_) {
+		this.set_exists(false);
 	}
 	,__class__: Mob
 });
@@ -2979,18 +2992,16 @@ PlayState.prototype = $extend(flixel.FlxState.prototype,{
 	level: null
 	,player: null
 	,healthText: null
+	,waves: null
 	,mob: null
-	,mob2: null
 	,create: function() {
 		flixel.FlxG.camera.bgColor = -11250604;
 		Reg.state = this;
 		this.addLevel();
 		this.addPlayer();
 		this.addUIText();
-		this.mob = new Mob(120,520);
-		this.mob2 = new Mob(580,520);
-		this.add(this.mob);
-		this.add(this.mob2);
+		this.waves = new flixel.group.FlxGroup();
+		new flixel.util.FlxTimer(2,$bind(this,this.addWave),8);
 		this.add(this.player.bullets);
 		flixel.FlxState.prototype.create.call(this);
 	}
@@ -3000,13 +3011,10 @@ PlayState.prototype = $extend(flixel.FlxState.prototype,{
 	,update: function() {
 		this.setUIText();
 		flixel.FlxG.overlap(this.level,this.player,null,flixel.FlxObject.separate);
-		flixel.FlxG.overlap(this.level,this.mob,null,flixel.FlxObject.separate);
-		flixel.FlxG.overlap(this.level,this.mob2,null,flixel.FlxObject.separate);
+		flixel.FlxG.overlap(this.level,this.waves,null,flixel.FlxObject.separate);
 		flixel.FlxG.overlap(this.player.bullets,this.level,$bind(this,this.bulletHitMap),flixel.FlxObject.separate);
-		flixel.FlxG.overlap(this.player.bullets,this.mob,$bind(this,this.bulletHitMob),flixel.FlxObject.separate);
-		flixel.FlxG.overlap(this.player.bullets,this.mob2,$bind(this,this.bulletHitMob),flixel.FlxObject.separate);
-		flixel.FlxG.overlap(this.mob,this.player,$bind(this,this.enemyPlayerOverlap),flixel.FlxObject.separate);
-		flixel.FlxG.overlap(this.mob2,this.player,$bind(this,this.enemyPlayerOverlap),flixel.FlxObject.separate);
+		flixel.FlxG.overlap(this.player.bullets,this.waves,$bind(this,this.bulletHitMob),flixel.FlxObject.separate);
+		flixel.FlxG.overlap(this.waves,this.player,$bind(this,this.enemyPlayerOverlap),flixel.FlxObject.separate);
 		flixel.FlxState.prototype.update.call(this);
 	}
 	,addLevel: function() {
@@ -3017,6 +3025,11 @@ PlayState.prototype = $extend(flixel.FlxState.prototype,{
 	,addPlayer: function() {
 		this.player = new Player(flixel.FlxG.width * 0.5,520);
 		this.add(this.player);
+	}
+	,addWave: function(_) {
+		this.waves.add(new Mob(10,550));
+		this.waves.add(new Mob(780,550));
+		this.add(this.waves);
 	}
 	,addUIText: function() {
 		this.healthText = new flixel.text.FlxText(0,580,flixel.FlxG.width);
@@ -3042,7 +3055,7 @@ PlayState.prototype = $extend(flixel.FlxState.prototype,{
 	,__class__: PlayState
 });
 var Player = function(x,y) {
-	this._health = 100;
+	this._health = 100000000;
 	this._jumpforce = 420;
 	this._maxFallSpeed = 800;
 	this._gravity = 1600;
@@ -3050,7 +3063,9 @@ var Player = function(x,y) {
 	this._maxAcceleration = 1000;
 	this._maxSpeed = 200;
 	flixel.FlxSprite.call(this,x,y);
-	this.makeGraphic(16,32,-16776961);
+	this.loadGraphic("assets/images/player.png",true,32,32);
+	this._facingFlip.set(1,{ x : true, y : false});
+	this._facingFlip.set(16,{ x : false, y : false});
 	this._shootSound = flixel.FlxG.sound.load("assets/sounds/shoot.wav",0.4);
 	this.maxVelocity.set_y(this._maxFallSpeed);
 	this.acceleration.set_y(this._gravity);
@@ -3080,17 +3095,27 @@ Player.prototype = $extend(flixel.FlxSprite.prototype,{
 		flixel.FlxSprite.prototype.update.call(this);
 	}
 	,kill: function() {
+		this.set_alive(false);
 		this.scale.set(1.5,1.5);
-		flixel.tweens.FlxTween.tween(this.scale,{ x : 1, y : 1},0.4,{ ease : flixel.tweens.FlxEase.elasticOut});
+		flixel.tweens.FlxTween.tween(this.scale,{ x : 1, y : 1},0.5,{ ease : flixel.tweens.FlxEase.elasticOut, complete : $bind(this,this.finishKill)});
 		this.acceleration.set_y(1200);
 		this.velocity.set_y(-200);
 		this.allowCollisions = 0;
 	}
+	,finishKill: function(_) {
+		this.set_exists(false);
+	}
 	,controls: function() {
 		var xForce = 0;
 		var jumping = false;
-		if(flixel.FlxG.keys.checkStatus(65,flixel.FlxG.keys.pressed.checkStatus)) xForce--;
-		if(flixel.FlxG.keys.checkStatus(68,flixel.FlxG.keys.pressed.checkStatus)) xForce++;
+		if(flixel.FlxG.keys.checkStatus(37,flixel.FlxG.keys.pressed.checkStatus)) {
+			xForce--;
+			this.set_facing(1);
+		}
+		if(flixel.FlxG.keys.checkStatus(39,flixel.FlxG.keys.pressed.checkStatus)) {
+			xForce++;
+			this.set_facing(16);
+		}
 		if(flixel.FlxG.keys.checkStatus(32,flixel.FlxG.keys.justPressed.checkStatus)) jumping = true;
 		if(flixel.FlxG.keys.checkStatus(32,flixel.FlxG.keys.justReleased.checkStatus)) this.velocity.set_y(this.velocity.y * 0.5);
 		xForce = flixel.util.FlxMath.bound(xForce,-1,1);
@@ -3101,18 +3126,16 @@ Player.prototype = $extend(flixel.FlxSprite.prototype,{
 			this.velocity.set_y(finalJumpForce);
 		}
 		this.bulletDelay--;
-		if(flixel.FlxG.keys.checkStatus(37,flixel.FlxG.keys.justPressed.checkStatus) && this.bulletDelay < 0) {
+		if(flixel.FlxG.keys.checkStatus(65,flixel.FlxG.keys.justPressed.checkStatus) && this.bulletDelay < 0) {
 			this.bulletDelay = 5;
-			this.bullet = new Bullet(this.x + this.get_width() / 2,this.y + this.get_height() / 2);
-			this.bullet.velocity.set_x(-this.bullet._velocity);
-			this.bullets.add(this.bullet);
-			this._shootSound.setPosition(this.x,this.y);
-			this._shootSound.play(true);
-		}
-		if(flixel.FlxG.keys.checkStatus(39,flixel.FlxG.keys.justPressed.checkStatus) && this.bulletDelay < 0) {
-			this.bulletDelay = 5;
-			this.bullet = new Bullet(this.x + this.get_width() / 2,this.y + this.get_height() / 2);
-			this.bullets.add(this.bullet);
+			if(this.facing == 1) {
+				this.bullet = new Bullet(this.x + this.get_width() / 2 - 8,this.y + this.get_height() / 2 - 2);
+				this.bullet.velocity.set_x(-this.bullet._velocity);
+				this.bullets.add(this.bullet);
+			} else {
+				this.bullet = new Bullet(this.x + this.get_width() / 2 + 7,this.y + this.get_height() / 2 - 2);
+				this.bullets.add(this.bullet);
+			}
 			this._shootSound.setPosition(this.x,this.y);
 			this._shootSound.play(true);
 		}

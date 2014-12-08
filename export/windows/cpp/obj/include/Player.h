@@ -61,6 +61,9 @@ class HXCPP_CLASS_ATTRIBUTES  Player_obj : public ::flixel::FlxSprite_obj{
 		virtual Void controls( );
 		Dynamic controls_dyn();
 
+		virtual Void animate( );
+		Dynamic animate_dyn();
+
 		virtual Void levelConstraints( );
 		Dynamic levelConstraints_dyn();
 

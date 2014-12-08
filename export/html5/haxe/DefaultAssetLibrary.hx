@@ -28,6 +28,7 @@ class DefaultAssetLibrary extends openfl.AssetLibrary {
 		add("assets/data/map.csv", TEXT);
 		add("assets/images/images-go-here.txt", TEXT);
 		add("assets/images/mapTiles.png", IMAGE);
+		add("assets/images/player.png", IMAGE);
 		add("assets/music/music-goes-here.txt", TEXT);
 		add("assets/sounds/shoot.wav", SOUND);
 		add("assets/sounds/sounds-go-here.txt", TEXT);

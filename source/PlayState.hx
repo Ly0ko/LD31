@@ -112,10 +112,12 @@ class PlayState extends FlxState
 
 	function addUIText():Void
 	{
+		#if desktop
 		healthText = new FlxText(0, 580, FlxG.width);
 		healthText.scrollFactor.set();
 		healthText.setFormat(null, 8, 0xdeeed6, "right", FlxText.BORDER_SHADOW, 0x4e4a4e);
 		add(healthText);
+		#end
 
 		killsText = new FlxText(0, 580, FlxG.width);
 		killsText.scrollFactor.set();
@@ -124,8 +126,9 @@ class PlayState extends FlxState
 	}
 
 	function setUIText():Void
-	{
+	{	#if desktop
 		healthText.text = "HEALTH: " + player.health;
+		#end
 		killsText.text = "KILLS: " + kills;
 	}
 

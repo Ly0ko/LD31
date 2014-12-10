@@ -3043,17 +3043,12 @@ PlayState.prototype = $extend(flixel.FlxState.prototype,{
 		new flixel.util.FlxTimer(2,$bind(this,this.addWave),6);
 	}
 	,addUIText: function() {
-		this.healthText = new flixel.text.FlxText(0,580,flixel.FlxG.width);
-		this.healthText.scrollFactor.set();
-		this.healthText.setFormat(null,8,14610134,"right",1,5130830);
-		this.add(this.healthText);
 		this.killsText = new flixel.text.FlxText(0,580,flixel.FlxG.width);
 		this.killsText.scrollFactor.set();
 		this.killsText.setFormat(null,8,14610134,"center",1,5130830);
 		this.add(this.killsText);
 	}
 	,setUIText: function() {
-		this.healthText.set_text("HEALTH: " + this.player.health);
 		this.killsText.set_text("KILLS: " + this.kills);
 	}
 	,enemyPlayerOverlap: function(mobRef,playerRef) {
